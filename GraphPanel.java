@@ -12,7 +12,7 @@ import java.util.List;
 import java.util.Random;
 import javax.swing.JFrame;
 import javax.swing.JPanel;
-//import javax.swing.SwingUtilities;
+import javax.swing.SwingUtilities;
 
 public class GraphPanel extends JPanel {
 
@@ -166,11 +166,11 @@ public class GraphPanel extends JPanel {
         frame.setVisible(true);
     }
 
-    // public static void main(String[] args) {
-    //   SwingUtilities.invokeLater(new Runnable() {
-    //      public void run() {
-    //         createAndShowGui();
-    //      }
-    //   });
-    // }
+     public static void main(String[] args) {
+       SwingUtilities.invokeLater(new Runnable() {
+          public void run() {
+             createAndShowGui();
+          }
+       });
+     }
 }
