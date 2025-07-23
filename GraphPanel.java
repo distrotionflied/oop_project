@@ -4,7 +4,6 @@ import java.awt.Dimension;
 import java.awt.FontMetrics;
 import java.awt.Graphics;
 import java.awt.Graphics2D;
-import java.awt.Point;
 import java.awt.RenderingHints;
 import java.awt.Stroke;
 import java.util.ArrayList;
@@ -13,11 +12,14 @@ import java.util.Random;
 import javax.swing.JFrame;
 import javax.swing.JPanel;
 import javax.swing.SwingUtilities;
+import java.awt.geom.Point2D;  // เพิ่มบรรทัดนี้
+import java.awt.geom.Line2D;   // ใช้สำหรับวาดเส้น
+import java.awt.geom.Ellipse2D; // ใช้สำหรับวาดจุด
 
 public class GraphPanel extends JPanel {
 
-    private int width = 800;
-    private int heigth = 400;
+//    private int width = 800;
+//    private int heigth = 400;
     private int padding = 25;
     private int labelPadding = 25;
     private Color lineColor = new Color(44, 102, 230, 180);
@@ -27,9 +29,15 @@ public class GraphPanel extends JPanel {
     private int pointWidth = 4;
     private int numberYDivisions = 10;
     private List<Double> scores;
+    private List<Point2D.Double> graphPoints = new ArrayList<>();
 
     public GraphPanel(List<Double> scores) {
         this.scores = scores;
+    }
+
+    public GraphPanel(List<Double> scores,Color color) {
+        this(scores);
+        this.pointColor = color;
     }
 
     @Override
@@ -41,11 +49,12 @@ public class GraphPanel extends JPanel {
         double xScale = ((double) getWidth() - (2 * padding) - labelPadding) / (scores.size() - 1);
         double yScale = ((double) getHeight() - 2 * padding - labelPadding) / (getMaxScore() - getMinScore());
 
-        List<Point> graphPoints = new ArrayList<>();
+        //List<Point> graphPoints = new ArrayList<>();
+        graphPoints.clear();
         for (int i = 0; i < scores.size(); i++) {
-            int x1 = (int) (i * xScale + padding + labelPadding);
-            int y1 = (int) ((getMaxScore() - scores.get(i)) * yScale + padding);
-            graphPoints.add(new Point(x1, y1));
+            double x1 = i * xScale + padding + labelPadding;  // พิกัด X เป็น double
+            double y1 = (getMaxScore() - scores.get(i)) * yScale + padding;  // พิกัด Y เป็น double
+            graphPoints.add(new Point2D.Double(x1, y1));
         }
 
         // draw white background
@@ -95,25 +104,23 @@ public class GraphPanel extends JPanel {
         g2.drawLine(padding + labelPadding, getHeight() - padding - labelPadding, padding + labelPadding, padding);
         g2.drawLine(padding + labelPadding, getHeight() - padding - labelPadding, getWidth() - padding, getHeight() - padding - labelPadding);
 
+        // วาดเส้นกราฟด้วย Line2D.Double
         Stroke oldStroke = g2.getStroke();
         g2.setColor(lineColor);
         g2.setStroke(GRAPH_STROKE);
         for (int i = 0; i < graphPoints.size() - 1; i++) {
-            int x1 = graphPoints.get(i).x;
-            int y1 = graphPoints.get(i).y;
-            int x2 = graphPoints.get(i + 1).x;
-            int y2 = graphPoints.get(i + 1).y;
-            g2.drawLine(x1, y1, x2, y2);
+            Point2D.Double p1 = graphPoints.get(i);
+            Point2D.Double p2 = graphPoints.get(i + 1);
+            g2.draw(new Line2D.Double(p1.x, p1.y, p2.x, p2.y));  // ใช้ double
         }
 
+        // วาดจุดข้อมูลด้วย Ellipse2D.Double
         g2.setStroke(oldStroke);
         g2.setColor(pointColor);
-        for (int i = 0; i < graphPoints.size(); i++) {
-            int x = graphPoints.get(i).x - pointWidth / 2;
-            int y = graphPoints.get(i).y - pointWidth / 2;
-            int ovalW = pointWidth;
-            int ovalH = pointWidth;
-            g2.fillOval(x, y, ovalW, ovalH);
+        for (Point2D.Double p : graphPoints) {
+            double x = p.x - pointWidth / 2.0;
+            double y = p.y - pointWidth / 2.0;
+            g2.fill(new Ellipse2D.Double(x, y, pointWidth, pointWidth));  // ใช้ double
         }
     }
 
@@ -150,7 +157,7 @@ public class GraphPanel extends JPanel {
     private static void createAndShowGui() {
         List<Double> scores = new ArrayList<>();
         Random random = new Random();
-        int maxDataPoints = 40;
+        int maxDataPoints = 10;
         int maxScore = 10;
         for (int i = 0; i < maxDataPoints; i++) {
             scores.add((double) random.nextDouble() * maxScore);
