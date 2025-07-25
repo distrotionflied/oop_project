@@ -1,10 +1,16 @@
 import javax.swing.JFrame;
 import javax.swing.JTable;
+import javax.swing.border.Border;
+
 import java.awt.BorderLayout;
+import java.awt.Button;
 import java.awt.Color;
+import java.awt.FlowLayout;
+import java.awt.Panel;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Random;
+
 
 public class application {
     public static void main(String[] args) {
@@ -16,6 +22,8 @@ public class application {
 class MyFrame extends JFrame {
     private GraphPanel graphPanel;
     private JTable table = new JTable(5, 4);
+    private Button btnOpen;
+    private Panel pnOpen;
 
     MyFrame() {
         // สร้างข้อมูลสำหรับ 3 เส้นกราฟ
@@ -38,10 +46,19 @@ class MyFrame extends JFrame {
         setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
         setSize(1000, 500);
         setLocationRelativeTo(null);
+        setLayout(new BorderLayout());
+        //เพิ่มปุ่ม
+        Panel pnOPen = new Panel();
+        btnOpen = new Button("Open File");
+        pnOPen.add(btnOpen);
+        
 
         // จัดวางคอมโพเนนต์
         add(table, BorderLayout.NORTH);
         add(graphPanel, BorderLayout.CENTER);
+        add(pnOPen, BorderLayout.SOUTH);
+        
+       
     }
 
     // เมธอดสร้างข้อมูลสุ่ม
