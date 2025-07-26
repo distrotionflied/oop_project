@@ -1,9 +1,7 @@
 import java.awt.*;
-import java.util.concurrent.Flow;
+import java.awt.event.*;
 import javax.swing.*;
 import javax.swing.filechooser.FileNameExtensionFilter;
-
-import java.awt.event.*;
 
 public class application {
     public static void main(String[] args) {
@@ -38,21 +36,33 @@ class MyFrame extends JFrame {
 
     //ทำguiด้านล่าง============================================================================
     private void bottomGui() {
+        getContentPane().setBackground(new Color(245, 245, 250));
+        
         buttomJPanel = new JPanel(new FlowLayout(FlowLayout.LEFT, 150, 25));
-        buttomJPanel.setPreferredSize(new Dimension(0, 80));
-        buttomJPanel.setBorder(BorderFactory.createLineBorder(Color.GRAY));
+        buttomJPanel.setPreferredSize(new Dimension(0, 100));
+        buttomJPanel.setBorder(BorderFactory.createMatteBorder(1, 0, 0, 0, Color.LIGHT_GRAY));
+        buttomJPanel.setBackground(new Color(255, 255, 255));
         buttomJPanel.setFont(tahomaFont);
 
         loadFile = new JButton("loadFile");
         loadFile.setFont(tahomaFont);
+        loadFile.setBackground(new Color(70, 130, 180));
+        loadFile.setForeground(Color.WHITE);
+        loadFile.setFocusPainted(false);
+        loadFile.setBorder(BorderFactory.createEmptyBorder(5, 15, 5, 15));
         loadFile.addActionListener(new LoadFileListener());
 
         Calculate = new JButton("CALCULATE");
         Calculate.setFont(tahomaFont);
+        Calculate.setBackground(new Color(60, 179, 113));
+        Calculate.setForeground(Color.WHITE);
+        Calculate.setFocusPainted(false);
+        Calculate.setBorder(BorderFactory.createEmptyBorder(5, 15, 5, 15));
 
         //textใส่ความลึก
         panelNear = new JPanel(new FlowLayout(FlowLayout.LEFT, 8, 0));
         panelNear.setFont(tahomaFont);
+        panelNear.setOpaque(false);
 
         textDeep = new JLabel("Calculate deep level Fluid contact");
         textDeep.setFont(tahomaFont);
@@ -62,6 +72,9 @@ class MyFrame extends JFrame {
         
         textCal = new JTextField("2500", 10);
         textCal.setFont(tahomaFont);
+        textCal.setFont(tahomaFont);
+        textCal.setHorizontalAlignment(JTextField.CENTER);
+        textCal.setBorder(BorderFactory.createLineBorder(Color.GRAY));
 
         //  panel สำหรับ  output
         OutputPanel outputPanel = new OutputPanel();
@@ -95,20 +108,26 @@ class MyFrame extends JFrame {
 //class สำหรับ พาเนบแสดงผล
 class OutputPanel extends JPanel{
     public OutputPanel() {
-        setLayout(new GridLayout(10, 10,1,1)); // 10x10 ช่อง 
+        setLayout(new GridLayout(10, 10, 2, 2));
+        setBorder(BorderFactory.createEmptyBorder(10, 20, 10, 20)); // 10x10 ช่อง
+        setBackground(new Color(240, 240, 240)); // พื้นหลังสุดเท่
+
         for (int i = 0; i < 100; i++) {
             int percent = (int)(Math.random()*100); // สุ่มเปอร์เซ็นต์ฺ for test gui
             String percentStr = Integer.toString(percent)+"%"; // สมมุติค่าร้อยละ
+            
             JLabel label = new JLabel(percentStr, SwingConstants.CENTER);
             label.setOpaque(true);
-            label.setBorder(BorderFactory.createLineBorder(Color.BLACK));
+            label.setFont(new Font("Tahoma", Font.BOLD, 12));
+            label.setForeground(Color.BLACK);
+            label.setBorder(BorderFactory.createLineBorder(Color.LIGHT_GRAY));
             
             if (percent >= 50) {
-                label.setBackground(Color.GREEN);
+                label.setBackground(Color.GREEN); // สีเขียว
             } else if (percent == 0) {
-                label.setBackground(Color.RED);
-            } else if(percent < 50){
-                label.setBackground(Color.YELLOW);
+                label.setBackground(Color.RED); // สีแดง
+            } else {
+                label.setBackground(Color.YELLOW); // สีเหลือง
             }
 
             this.add(label); // ❗❗ สำคัญ
@@ -118,12 +137,12 @@ class OutputPanel extends JPanel{
 
 //คลาสสำหรับคำนวณ ปริมาตรแก็ส
 class VolumeOfGasCalculator {
-    //atrribute 
+    //atrribute
     private int row;
     private int col;
 
     //public VolumeOfGasCalculator(int row,int col){
-    //    
+    //
     //}
     public int getCol() {
         return col;
@@ -132,6 +151,6 @@ class VolumeOfGasCalculator {
         return row;
     }
     //public int getGasVolume(){
-    //    return 
+    //    return
     //}
 } 
