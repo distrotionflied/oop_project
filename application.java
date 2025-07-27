@@ -1,20 +1,3 @@
-<<<<<<< HEAD
-import java.awt.*;
-import java.awt.event.*;
-import javax.swing.*;
-import javax.swing.filechooser.FileNameExtensionFilter;
-=======
-<<<<<<< Updated upstream
-import javax.swing.JFrame;
-import javax.swing.JTable;
-import java.awt.BorderLayout;
-import java.awt.Color;
-import java.util.ArrayList;
-import java.util.List;
-import java.util.Random;
->>>>>>> dream-branch
-
-=======
 import java.awt.*;
 import java.util.concurrent.Flow;
 import javax.swing.*;
@@ -32,7 +15,6 @@ import java.io.BufferedReader;
 import javax.swing.event.DocumentEvent;   // สำหรับ DocumentEvent
 import javax.swing.event.DocumentListener; // สำหรับ DocumentListener
 import javax.swing.Timer;                 // ถ้าใช้ Timer สำหรับดีเลย์
->>>>>>> Stashed changes
 public class application {
     public static void main(String[] args) {
         MyFrame frame = new MyFrame();
@@ -43,16 +25,6 @@ public class application {
 
 class MyFrame extends JFrame {
 
-<<<<<<< HEAD
-=======
-<<<<<<< Updated upstream
-    MyFrame() {
-        // สร้างข้อมูลสำหรับ 3 เส้นกราฟ
-        List<Double> redScores = generateRandomData(10, 10);
-        List<Double> blueScores = generateRandomData(10, 10);
-        List<Double> greenScores = generateRandomData(10, 10);
-=======
->>>>>>> dream-branch
     private JPanel buttomJPanel;
     private JButton loadFile;
     private JLabel textDeep;
@@ -60,8 +32,6 @@ class MyFrame extends JFrame {
     private JPanel panelNear;
     private JButton Calculate;
     private JLabel textDistance;
-<<<<<<< HEAD
-=======
     private LoadFileListener loadFileListener = new LoadFileListener();
     private Timer updateTimer = new Timer(1000, e -> updateAutomatically()); 
     private OutputPanel outputPanel;
@@ -85,8 +55,6 @@ class MyFrame extends JFrame {
     public JTextField getTextCal() {
         return textCal;
     }
->>>>>>> Stashed changes
->>>>>>> dream-branch
 
     private Font tahomaFont = new Font("Tahoma", Font.PLAIN, 16); //เปลี่ยนฟอนต์
 
@@ -101,61 +69,23 @@ class MyFrame extends JFrame {
         
     }
 
-<<<<<<< HEAD
-    //ทำguiด้านล่าง============================================================================
-    private void bottomGui() {
-        getContentPane().setBackground(new Color(245, 245, 250));
-        
-        buttomJPanel = new JPanel(new FlowLayout(FlowLayout.LEFT, 150, 25));
-        buttomJPanel.setPreferredSize(new Dimension(0, 100));
-        buttomJPanel.setBorder(BorderFactory.createMatteBorder(1, 0, 0, 0, Color.LIGHT_GRAY));
-        buttomJPanel.setBackground(new Color(255, 255, 255));
-=======
-<<<<<<< Updated upstream
-    // เมธอดสร้างข้อมูลสุ่ม
-    private List<Double> generateRandomData(int count, int max) {
-        List<Double> data = new ArrayList<>();
-        Random random = new Random();
-        for (int i = 0; i < count; i++) {
-            data.add(random.nextDouble() * max);
-=======
     //ทำguiด้านล่าง============================================================================
     private void bottomGui() {
         buttomJPanel = new JPanel(new FlowLayout(FlowLayout.LEFT, 150, 25));
         buttomJPanel.setPreferredSize(new Dimension(0, 80));
         buttomJPanel.setBorder(BorderFactory.createLineBorder(Color.GRAY));
->>>>>>> dream-branch
         buttomJPanel.setFont(tahomaFont);
 
         loadFile = new JButton("loadFile");
         loadFile.setFont(tahomaFont);
-<<<<<<< HEAD
-        loadFile.setBackground(new Color(70, 130, 180));
-        loadFile.setForeground(Color.WHITE);
-        loadFile.setFocusPainted(false);
-        loadFile.setBorder(BorderFactory.createEmptyBorder(5, 15, 5, 15));
-        loadFile.addActionListener(new LoadFileListener());
-
-        Calculate = new JButton("CALCULATE");
-        Calculate.setFont(tahomaFont);
-        Calculate.setBackground(new Color(60, 179, 113));
-        Calculate.setForeground(Color.WHITE);
-        Calculate.setFocusPainted(false);
-        Calculate.setBorder(BorderFactory.createEmptyBorder(5, 15, 5, 15));
-=======
         loadFile.addActionListener(loadFileListener);
 
         Calculate = new JButton("CALCULATE");
         Calculate.setFont(tahomaFont);
->>>>>>> dream-branch
 
         //textใส่ความลึก
         panelNear = new JPanel(new FlowLayout(FlowLayout.LEFT, 8, 0));
         panelNear.setFont(tahomaFont);
-<<<<<<< HEAD
-        panelNear.setOpaque(false);
-=======
->>>>>>> dream-branch
 
         textDeep = new JLabel("Calculate deep level Fluid contact");
         textDeep.setFont(tahomaFont);
@@ -165,15 +95,6 @@ class MyFrame extends JFrame {
         
         textCal = new JTextField("2500", 10);
         textCal.setFont(tahomaFont);
-<<<<<<< HEAD
-        textCal.setFont(tahomaFont);
-        textCal.setHorizontalAlignment(JTextField.CENTER);
-        textCal.setBorder(BorderFactory.createLineBorder(Color.GRAY));
-
-        //  panel สำหรับ  output
-        OutputPanel outputPanel = new OutputPanel();
-=======
->>>>>>> dream-branch
 
         //ที่add
         panelNear.add(textDeep);
@@ -185,9 +106,6 @@ class MyFrame extends JFrame {
         buttomJPanel.add(loadFile);
         buttomJPanel.add(panelNear);
         
-<<<<<<< HEAD
-        add(outputPanel,BorderLayout.CENTER);//พาเนลสำหรับ เอาท์พุต ใส่ไว้ก่อน แต่ควรมาแก้ออกทีหลัง
-=======
         //  panel สำหรับ  output
         OutputPanel outputPanel = new OutputPanel(loadFileListener);
         add(outputPanel,BorderLayout.CENTER);
@@ -234,24 +152,15 @@ class MyFrame extends JFrame {
                     }
                 }
             }
-        }
-        );
+        });
 
 
->>>>>>> dream-branch
         add(buttomJPanel, BorderLayout.SOUTH);
     }
     //END======================================================================================
 
     //ทำให้เปิดหน้าต่างเลือกไฟล์ได้==================================================================
         class LoadFileListener implements ActionListener {
-<<<<<<< HEAD
-        @Override
-        public void actionPerformed(ActionEvent e) {
-        JFileChooser chooseFile = new JFileChooser();
-        chooseFile.setFileFilter(new FileNameExtensionFilter("Text File (*.txt)", "txt"));
-        if (chooseFile.showOpenDialog(MyFrame.this) == JFileChooser.APPROVE_OPTION) {
-=======
         private VolumeOfGasCalculator vgc;
         double[][] allPercent;
         int[][] allValue;
@@ -364,9 +273,9 @@ class MyFrame extends JFrame {
                         // ถ้าไฟล์ไม่ว่าง ข้อมูลทั้งหมดเป็นตัวเลข และ จำนวนคอลัมน์ เท่ากันในทุกแถว
                         // *** ใส่โค้ดสำหรับประมวลผลไฟล์ต่อจากนี้ ***
                         //ประกาศออปเจคของคลาส
-                            int fluidContact = 2500;
+                            int fluiidContract = 2500;
                             try {
-                                    fluidContact =  Integer.parseInt(textCal.getText());
+                                    fluiidContract =  Integer.parseInt(textCal.getText());
                                 } catch (NumberFormatException ex) {
                                 JOptionPane.showMessageDialog(MyFrame.this,
                                     "Data Invalid Please check your Textflied",
@@ -374,30 +283,11 @@ class MyFrame extends JFrame {
                                     JOptionPane.INFORMATION_MESSAGE); 
                                     return;
                                 }
-
-                                // ใน LoadFileListener ก่อนสร้าง vgc
-                                    for (List<Integer> row : baseHolizonDataTable) {
-                                        for (int value : row) {
-                                            if (value <= 0) {
-                                                JOptionPane.showMessageDialog(MyFrame.this,
-                                                    "value less than zero",
-                                                    "data invalid",
-                                                    JOptionPane.ERROR_MESSAGE);
-                                                return;
-                                            }
-                                        }
-                                    }
-
-                                // ใน LoadFileListener.actionPerformed()
-                                vgc = new VolumeOfGasCalculator(rowThatCanUsed, colOfLineChecker, fluidContact);
-                                for (int i = 0; i < rowThatCanUsed; i++) {
-                                    List<Integer> rowData = baseHolizonDataTable.get(i);
-                                    for (int j = 0; j < colOfLineChecker; j++) {
-                                        vgc.setbaseHolizonValuePerCell(i, j, rowData.get(j));
-                                        System.out.print(rowData.get(j) + " "); // Debug output
-                                    }
-                                    System.out.println();
-                                }
+                            vgc = new VolumeOfGasCalculator(rowThatCanUsed, colOfLineChecker,fluiidContract);
+                        
+                        for (int i = 0; i < baseHolizonDataTable.size(); i++) {
+                            vgc.setbaseHolizonValuePerline(i,baseHolizonDataTable.get(i));
+                        }
                         vgc.findGasVolume(); //คำนวณหาค่า
                         allPercent = vgc.getPercentVolume();
                         allValue = vgc.getVolume();
@@ -430,56 +320,8 @@ class MyFrame extends JFrame {
                 // ผู้ใช้กด "Cancel" หรือปิดหน้าต่าง JFileChooser
                 // System.out.println("File selection cancelled.");
             }
->>>>>>> Stashed changes
->>>>>>> dream-branch
         }
     }
-<<<<<<< HEAD
-    }
-}
-//class สำหรับ พาเนบแสดงผล
-class OutputPanel extends JPanel{
-    public OutputPanel() {
-        setLayout(new GridLayout(10, 10, 2, 2));
-        setBorder(BorderFactory.createEmptyBorder(10, 20, 10, 20)); // 10x10 ช่อง
-        setBackground(new Color(240, 240, 240)); // พื้นหลังสุดเท่
-
-        for (int i = 0; i < 100; i++) {
-            int percent = (int)(Math.random()*100); // สุ่มเปอร์เซ็นต์ฺ for test gui
-            String percentStr = Integer.toString(percent)+"%"; // สมมุติค่าร้อยละ
-            
-            JLabel label = new JLabel(percentStr, SwingConstants.CENTER);
-            label.setOpaque(true);
-            label.setFont(new Font("Tahoma", Font.BOLD, 12));
-            label.setForeground(Color.BLACK);
-            label.setBorder(BorderFactory.createLineBorder(Color.LIGHT_GRAY));
-            
-            if (percent >= 50) {
-                label.setBackground(Color.GREEN); // สีเขียว
-            } else if (percent == 0) {
-                label.setBackground(Color.RED); // สีแดง
-            } else {
-                label.setBackground(Color.YELLOW); // สีเหลือง
-            }
-
-            this.add(label); // ❗❗ สำคัญ
-        }
-    }
-}
-
-//คลาสสำหรับคำนวณ ปริมาตรแก็ส
-class VolumeOfGasCalculator {
-    //atrribute
-    private int row;
-    private int col;
-
-    //public VolumeOfGasCalculator(int row,int col){
-    //
-    //}
-=======
-<<<<<<< Updated upstream
-}
-=======
     //=========================================================================================
 
 //class สำหรับ พาเนบแสดงผล
@@ -495,27 +337,22 @@ class OutputPanel extends JPanel{
         row = this.lfl.getLoadRow();
         col = this.lfl.getLoadCol();
         this.removeAll(); // ลบคอมโพเนนต์ทั้งหมดใน panel
-        if (lfl == null || !lfl.getloadFileSuccess_Status()) {
-        setBackground(Color.RED);
-        return;
-        }
-
-        VolumeOfGasCalculator vgc = lfl.getVGC();
-        if (vgc == null) return;
-        
+        if(lfl.getloadFileSuccess_Status()){
+            setBackground(Color.WHITE);
             setLayout(new GridLayout(row,col,1,1));
+            VolumeOfGasCalculator vgc = lfl.getVGC();
             double[][] percent = vgc.getPercentVolume();
             int [][] volume = vgc.getVolume();
             for (int i = 0; i < row; i++) {
                 for (int j = 0; j < col; j++) {
                 String percentStr = String.format(
-                        "<html><div style='text-align: center;'>" +
-                        "<font size='5'><b>%.2f%%</b></font><br/>" +  // แสดงทศนิยม 2 ตำแหน่ง
-                        "<font size='3'>(%,d)</font>" +               // แสดงจำนวนเต็มมี comma
-                        "</div></html>",
-                        percent[i][j], 
-                        volume[i][j]
-                    ); // ค่าร้อยละ และ ปริมาตร
+                                        "<html><div style='text-align: center;'>" +
+                                        "<font size='5'><b>%.2f%%</b></font><br/>" +  // ตัวใหญ่ + ตัวหนา (บรรทัดบน)
+                                        "<font size='3'>(%d)</font>" +               // ตัวเล็ก (บรรทัดล่าง)
+                                        "</div></html>",
+                                        percent[i][j], 
+                                        volume[i][j]
+                                    ); // ค่าร้อยละ และ ปริมาตร
                 JLabel label = new JLabel(percentStr, SwingConstants.CENTER);
                 label.setOpaque(true);
                 label.setBorder(BorderFactory.createLineBorder(Color.BLACK));
@@ -529,6 +366,9 @@ class OutputPanel extends JPanel{
                 this.add(label); // ❗❗ สำคัญ
                 }
             }
+        }else{
+            setBackground(Color.RED);
+        }
         this.revalidate(); // บังคับให้ JPanel คำนวณเลย์เอาต์ใหม่
         this.repaint();    // วาดใหม่
     }
@@ -556,27 +396,33 @@ class VolumeOfGasCalculator {
         percenrVolume = new double[this.row][this.col]; 
         this.fluidContract = fluidContract;
     }
-    public void setbaseHolizonValuePerCell(int row, int col, int value) {
-        if (row >= 0 && row < this.row && col >= 0 && col < this.col) {
-            this.baseHolizon[row][col] = value;
+    public void setbaseHolizonValuePerline(int row,List<Integer> dataTable){
+        for (int i = 0; i < this.row; i++) {
+            // ตรวจสอบขนาดคอลัมน์ในแต่ละแถว (ถ้าเป็นไปได้)
+            if (dataTable.size() != this.col) {
+                 System.err.println("Warning: Row " + i + " has inconsistent column count. Expected " + this.col + ", got " + dataTable.size());
+                 // คุณอาจจะเลือกจัดการตรงนี้อย่างไร: เช่น ปรับ this.col, หรือข้ามแถวนี้
+            }
+            for (int j = 0; j < this.col; j++) {
+                // ตรวจสอบป้องกัน IndexOutOfBoundsException หากแถวสั้นกว่าที่คาด
+                if (j < dataTable.size()) {
+                    this.baseHolizon[i][j] = dataTable.get(j);
+                } else {
+                    // จัดการกรณีที่คอลัมน์ขาดหายไป เช่น กำหนดเป็น 0 หรือค่า default
+                    this.baseHolizon[i][j] = 0;
+                }
+            }
         }
     }
     public void setbaseHolizonValue(int data){
         fluidContract = data;
     }
->>>>>>> dream-branch
     public int getCol() {
         return col;
     }
     public int getRow() {
         return row;
     }
-<<<<<<< HEAD
-    //public int getGasVolume(){
-    //    return
-    //}
-} 
-=======
     public int[][] getVolume(){
         return volume;
     }
@@ -586,27 +432,17 @@ class VolumeOfGasCalculator {
     public boolean isInfoOfDataIsReal(){
         return infoOfDataIsReal;
     }
-    public void findGasVolume() {
-    for (int i = 0; i < baseHolizon.length; i++) {
-        for (int j = 0; j < baseHolizon[0].length; j++) {
-            // ตรวจสอบค่าฐานก่อนคำนวณ
-            topHolizon[i][j] = baseHolizon[i][j] - 200;
-            // คำนวณปกติ
-            volume[i][j] =  150*150*(fluidContract - topHolizon[i][j]);
-             System.out.println("="+volume[i][j]);
-            percenrVolume[i][j] = ((double)volume[i][j] / (double)(200*150*150)) * 100;
-            System.out.println(percenrVolume[i][j] + "%");
-            if(percenrVolume[i][j] < 0 || percenrVolume[i][j] > 100){
-                infoOfDataIsReal = false;
+    public void findGasVolume(){
+        for (int i = 0; i < baseHolizon.length; i++) {
+            for (int j = 0; j < baseHolizon[0].length; j++) {
+                topHolizon[i][j] = baseHolizon[i][j] - 200;
+                volume[i][j] = 150*150*(fluidContract - (topHolizon[i][j]));
+                percenrVolume[i][j] =  ((double)volume[i][j] / (double)(150*150*(200))) * 100;
+                if(percenrVolume[i][j] > 100 || percenrVolume[i][j] < 0){
+                    infoOfDataIsReal = false;
+                }
             }
-        }
+        }                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                 
     }
 }
-} 
-
 }
-
-
-
->>>>>>> Stashed changes
->>>>>>> dream-branch
