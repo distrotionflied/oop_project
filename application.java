@@ -71,94 +71,124 @@ class MyFrame extends JFrame {
 
     //ทำguiด้านล่าง============================================================================
     private void bottomGui() {
-        buttomJPanel = new JPanel(new FlowLayout(FlowLayout.LEFT, 150, 25));
-        buttomJPanel.setPreferredSize(new Dimension(0, 80));
-        buttomJPanel.setBorder(BorderFactory.createLineBorder(Color.GRAY));
-        buttomJPanel.setFont(tahomaFont);
 
-        loadFile = new JButton("loadFile");
-        loadFile.setFont(tahomaFont);
-        loadFile.addActionListener(loadFileListener);
+    
+    // สีธีมหลัก
+    Color bgColor = new Color(245, 248, 250); // สีพื้นหลังอ่อน
+    Color btnColor = new Color(33, 150, 243); // สีปุ่มน้ำเงิน
+    Color btnTextColor = Color.WHITE;
+    Color borderColor = new Color(200, 200, 200);
 
-        Calculate = new JButton("CALCULATE");
-        Calculate.setFont(tahomaFont);
+    // สร้าง panel ด้านล่าง
+    buttomJPanel = new JPanel(new FlowLayout(FlowLayout.LEFT, 150, 25));
+    buttomJPanel.setPreferredSize(new Dimension(0, 90));
+    buttomJPanel.setBackground(bgColor);
+    buttomJPanel.setBorder(BorderFactory.createMatteBorder(1, 0, 0, 0, borderColor));
 
-        //textใส่ความลึก
-        panelNear = new JPanel(new FlowLayout(FlowLayout.LEFT, 8, 0));
-        panelNear.setFont(tahomaFont);
+    // ปุ่ม load file
+    loadFile = new RoundedButton("Load File");
+    loadFile.setFont(tahomaFont);
+    loadFile.setBackground(btnColor);
+    loadFile.setForeground(btnTextColor);
+    loadFile.setFocusPainted(false);
+    loadFile.setBorder(BorderFactory.createEmptyBorder(8, 16, 8, 16));
+    loadFile.addActionListener(loadFileListener);
 
-        textDeep = new JLabel("Calculate deep level Fluid contact");
-        textDeep.setFont(tahomaFont);
+    // ปุ่มคำนวณ
+    Calculate = new RoundedButton("Calculate");
+    Calculate.setFont(tahomaFont);
+    Calculate.setBackground(new Color(76, 175, 80)); // สีเขียว
+    Calculate.setForeground(Color.WHITE);
+    Calculate.setFocusPainted(false);
+    Calculate.setBorder(BorderFactory.createEmptyBorder(8, 16, 8, 16));
 
-        textDistance = new JLabel("Meter");
-        textDistance.setFont(tahomaFont);
-        
-        textCal = new JTextField("2500", 10);
-        textCal.setFont(tahomaFont);
+    // panel ด้านขวา
+    panelNear = new JPanel(new FlowLayout(FlowLayout.LEFT, 8, 0));
+    panelNear.setOpaque(false);
 
-        //ที่add
-        panelNear.add(textDeep);
-        panelNear.add(textCal);
-        panelNear.add(textDistance);
-        panelNear.add(Calculate);
-        panelNear.setOpaque(false);
+    // label และ input
+    textDeep = new JLabel("Fluid Contact:");
+    textDeep.setFont(tahomaFont);
+    textDeep.setForeground(new Color(50, 50, 50));
 
-        buttomJPanel.add(loadFile);
-        buttomJPanel.add(panelNear);
-        
-        //  panel สำหรับ  output
-        OutputPanel outputPanel = new OutputPanel(loadFileListener);
-        add(outputPanel,BorderLayout.CENTER);
+    textCal = new JTextField("2500", 10);
+    textCal.setFont(tahomaFont);
+    textCal.setBorder(BorderFactory.createLineBorder(borderColor));
 
-        //ปุ่ม calculate
-            Calculate.addActionListener(e -> {
+    textDistance = new JLabel("meters");
+    textDistance.setFont(tahomaFont);
+    textDistance.setForeground(new Color(80, 80, 80));
+
+    //ที่add
+    panelNear.add(textDeep);
+    panelNear.add(textCal);
+    panelNear.add(textDistance);
+    panelNear.add(Calculate);
+
+    // เพิ่มทุกอย่างลง panel ล่าง
+    buttomJPanel.add(loadFile);
+    buttomJPanel.add(panelNear);
+
+    // Panel แสดงผล
+    outputPanel = new OutputPanel(loadFileListener);
+    add(outputPanel, BorderLayout.CENTER);
+
+    // ฟังชันก์ปุ่ม Calculate
+    Calculate.addActionListener(e -> {
         try {
-            int newFluidContact = Integer.parseInt(textCal.getText()); // ดึงค่าล่าสุด
-            loadFileListener.getVGC().setbaseHolizonValue(newFluidContact); // อัปเดตค่า
-            loadFileListener.getVGC().findGasVolume();; // คำนวณใหม่
+            int newFluidContact = Integer.parseInt(textCal.getText());
+            loadFileListener.getVGC().setbaseHolizonValue(newFluidContact);
+            loadFileListener.getVGC().findGasVolume();
             outputPanel.refreshPanel();
         } catch (NumberFormatException ex) {
-            // แจ้งเตือนข้อผิดพลาด
+            JOptionPane.showMessageDialog(this,
+                    "Please enter a valid number.",
+                    "Invalid Input",
+                    JOptionPane.ERROR_MESSAGE);
         }
     });
-        
 
+    // ตรวจค่าทันทีเมื่อพิมพ์
     textCal.getDocument().addDocumentListener(new DocumentListener() {
-        @Override
-        public void insertUpdate(DocumentEvent e) {
-            updateAutomatically();
-        }
-        @Override
-        public void removeUpdate(DocumentEvent e) {
-            updateAutomatically();
-        }
-        @Override
-        public void changedUpdate(DocumentEvent e) {
-            // ไม่จำเป็นสำหรับ JTextField ปกติ
-        }
+        @Override public void insertUpdate(DocumentEvent e) { updateAutomatically(); }
+        @Override public void removeUpdate(DocumentEvent e) { updateAutomatically(); }
+        @Override public void changedUpdate(DocumentEvent e) {}
+    });
 
-        private void updateAutomatically() {
-            if (loadFileListener.getloadFileSuccess_Status()) {
-                    try {
-                        int newFluidContact = Integer.parseInt(textCal.getText());
-                        // 1. อัปเดตค่าใน VolumeOfGasCalculator
-                        loadFileListener.getVGC().setbaseHolizonValue(newFluidContact);
-                        // 2. คำนวณใหม่
-                        loadFileListener.getVGC().findGasVolume();
-                        // 3. รีเฟรชผลลัพธ์
-                        outputPanel.refreshPanel();
-                    } catch (NumberFormatException ex) {
-                        // ไม่ต้องแจ้งเตือนขณะพิมพ์ (รอจนผู้ใช้หยุดพิมพ์)
-                    }
-                }
-            }
-        });
+    add(buttomJPanel, BorderLayout.SOUTH);
+}
 
-
-        add(buttomJPanel, BorderLayout.SOUTH);
-    }
     //END======================================================================================
 
+class RoundedButton extends JButton {
+    public RoundedButton(String label) {
+        super(label);
+        setOpaque(false);
+        setFocusPainted(false);
+        setContentAreaFilled(false);
+        setBorderPainted(false);
+        setForeground(Color.WHITE);
+        setFont(new Font("SansSerif", Font.BOLD, 14));
+        setBackground(new Color(33, 150, 243)); // สีพื้นหลังปุ่ม
+    }
+
+    @Override
+    protected void paintComponent(Graphics g) {
+        Graphics2D g2 = (Graphics2D) g.create();
+        g2.setRenderingHint(RenderingHints.KEY_ANTIALIASING, RenderingHints.VALUE_ANTIALIAS_ON);
+        g2.setColor(getBackground());
+        g2.fillRoundRect(0, 0, getWidth(), getHeight(), 30, 30);
+        super.paintComponent(g2);
+        g2.dispose();
+    }
+
+    @Override
+    public void paintBorder(Graphics g) {
+        // ไม่วาด border เพื่อความเนียน
+    }
+
+    
+}
     //ทำให้เปิดหน้าต่างเลือกไฟล์ได้==================================================================
         class LoadFileListener implements ActionListener {
         private VolumeOfGasCalculator vgc;
@@ -298,7 +328,7 @@ class MyFrame extends JFrame {
                                 "File loaded successfully! All data are numbers.",
                                 "Success",
                                 JOptionPane.INFORMATION_MESSAGE);
-                                loadFileSuccess = true;      
+                                loadFileSuccess = true;
                         }else{
                             JOptionPane.showMessageDialog(MyFrame.this,
                                 "Your data isn't base on Reality.",
@@ -357,17 +387,17 @@ class OutputPanel extends JPanel{
                 label.setOpaque(true);
                 label.setBorder(BorderFactory.createLineBorder(Color.BLACK));
                 if (percent[i][j] >= 50) {
-                    label.setBackground(Color.GREEN);
+                    label.setBackground(new Color(144, 238, 144)); //สีเขียว
                 } else if (percent[i][j] == 0) {
                     label.setBackground(Color.RED);
                 } else if(percent[i][j] < 50){
-                    label.setBackground(Color.YELLOW);
+                    label.setBackground(new Color(240, 230, 140)); //สีเหลือง
                 }
                 this.add(label); // ❗❗ สำคัญ
                 }
             }
         }else{
-            setBackground(Color.RED);
+            setBackground(Color.LIGHT_GRAY);
         }
         this.revalidate(); // บังคับให้ JPanel คำนวณเลย์เอาต์ใหม่
         this.repaint();    // วาดใหม่
@@ -400,7 +430,7 @@ class VolumeOfGasCalculator {
         for (int i = 0; i < this.row; i++) {
             // ตรวจสอบขนาดคอลัมน์ในแต่ละแถว (ถ้าเป็นไปได้)
             if (dataTable.size() != this.col) {
-                 System.err.println("Warning: Row " + i + " has inconsistent column count. Expected " + this.col + ", got " + dataTable.size());
+                System.err.println("Warning: Row " + i + " has inconsistent column count. Expected " + this.col + ", got " + dataTable.size());
                  // คุณอาจจะเลือกจัดการตรงนี้อย่างไร: เช่น ปรับ this.col, หรือข้ามแถวนี้
             }
             for (int j = 0; j < this.col; j++) {
