@@ -14,7 +14,6 @@ import java.awt.event.*;
 import java.io.BufferedReader;
 import javax.swing.event.DocumentEvent;   // สำหรับ DocumentEvent
 import javax.swing.event.DocumentListener; // สำหรับ DocumentListener
-import javax.swing.Timer;                 // ถ้าใช้ Timer สำหรับดีเลย์
 public class application {
     public static void main(String[] args) {
         MyFrame frame = new MyFrame();
@@ -243,7 +242,7 @@ class RoundedButton extends JButton {
                     int [] dataInt;
                     int colOfLineChecker = 0; //สำหรับตรวจสอบว่าคอลัมพ์เท่ากันไหม และจะเป็นตัวอินพุตจำนวนคอลัมน์
                     boolean isColEqual = true;//สถานะ สำหรับตรวจสอบว่าคอลัมพ์เท่ากันไหม
-                    int rowThatCanUsed = allLines.size();//จำนวนบรรทัดที่ไม่นับบรรทัดที่ว่าง และจะเป็นจำนวนของ row
+                    int rowThatCanUsed = (int)allLines.stream().filter(line -> !line.trim().isEmpty()).count();//จำนวนบรรทัดที่ไม่นับบรรทัดที่ว่าง และจะเป็นจำนวนของ row
                     if (allLines.isEmpty()) { // กรณีไฟล์ไม่ว่างเปล่าแต่ไม่มีบรรทัดข้อมูล (เช่น มีแค่ enter)
                         JOptionPane.showMessageDialog(MyFrame.this,
                                 "The selected file contains no discernible data lines.",
@@ -251,15 +250,10 @@ class RoundedButton extends JButton {
                                 JOptionPane.WARNING_MESSAGE);
                         return;
                     }
+                    System.out.println(rowThatCanUsed);
                     for (String line : allLines) {
-                        // ลบช่องว่างหัวท้ายบรรทัดก่อนตรวจสอบ
-                        System.out.print(line);
-                        if (line.isEmpty()) {
-                                rowThatCanUsed--;//จะมีการลบทีละ 1 เมื่อพบบบรรทัดที่ว่าง
-                                continue;
-                        }else{
                             //split
-                            dataStr = line.split(" ");
+                            dataStr = line.split("\\s+");
                             dataInt = new int[dataStr.length];
                             for (String dataStrtoDecimal : dataStr) {
                                 // ตรวจสอบว่าแต่ละบรรทัดเป็นตัวเลขหรือไม่
@@ -269,7 +263,6 @@ class RoundedButton extends JButton {
                                         Arrays.asList(dataStr).indexOf(dataStrtoDecimal)
                                     ]
                                      = Integer.parseInt(dataStrtoDecimal); // พยายามแปลงเป็นตัวเลข
-
                                 } catch (NumberFormatException ex) {
                                     // ถ้าแปลงไม่ได้ แสดงว่าไม่ใช่ตัวเลข
                                     allNumbers = false;
@@ -278,11 +271,11 @@ class RoundedButton extends JButton {
                             }
                             if(colOfLineChecker == 0){
                                 colOfLineChecker = dataStr.length;
-                            }else if(colOfLineChecker != dataStr.length){
+                            }else if(colOfLineChecker != dataStr.length &&colOfLineChecker != dataInt.length){
                                 isColEqual = false;
                             }
-                        }
-                        if (!allNumbers || !isColEqual){break;}
+                        
+                        if (!allNumbers && !isColEqual){break;}
                         else{
                             baseHolizonDataTable.add(Arrays.stream(dataInt).boxed().collect(Collectors.toList()));//เมื่อผ่านการตรวจสอบจะเก็บอาเรย์ที่ผ่าน ใส่ใน arraylist
                             //ใช้ .stream เพื่อให้ arraylist ยอมรับ int[]
@@ -315,10 +308,8 @@ class RoundedButton extends JButton {
                                     return;
                                 }
                             vgc = new VolumeOfGasCalculator(rowThatCanUsed, colOfLineChecker,fluiidContract);
-                        
-                        for (int i = 0; i < baseHolizonDataTable.size(); i++) {
-                            vgc.setbaseHolizonValuePerline(i,baseHolizonDataTable.get(i));
-                        }
+                            vgc.setbaseHolizonValuePerline(baseHolizonDataTable);
+                           
                         vgc.findGasVolume(); //คำนวณหาค่า
                         allPercent = vgc.getPercentVolume();
                         allValue = vgc.getVolume();
@@ -338,7 +329,6 @@ class RoundedButton extends JButton {
                                 return;
                         }
                     }
-
                 } catch (IOException ex) {
                     // จัดการข้อผิดพลาดที่อาจเกิดขึ้นระหว่างการอ่านไฟล์
                     JOptionPane.showMessageDialog(MyFrame.this,
@@ -426,17 +416,17 @@ class VolumeOfGasCalculator {
         percenrVolume = new double[this.row][this.col]; 
         this.fluidContract = fluidContract;
     }
-    public void setbaseHolizonValuePerline(int row,List<Integer> dataTable){
+    public void setbaseHolizonValuePerline(List<List<Integer>> dataTable){
         for (int i = 0; i < this.row; i++) {
             // ตรวจสอบขนาดคอลัมน์ในแต่ละแถว (ถ้าเป็นไปได้)
-            if (dataTable.size() != this.col) {
+            if (dataTable.get(0).size() != this.col) {
                 System.err.println("Warning: Row " + i + " has inconsistent column count. Expected " + this.col + ", got " + dataTable.size());
                  // คุณอาจจะเลือกจัดการตรงนี้อย่างไร: เช่น ปรับ this.col, หรือข้ามแถวนี้
             }
             for (int j = 0; j < this.col; j++) {
                 // ตรวจสอบป้องกัน IndexOutOfBoundsException หากแถวสั้นกว่าที่คาด
-                if (j < dataTable.size()) {
-                    this.baseHolizon[i][j] = dataTable.get(j);
+                if (j < dataTable.get(0).size()) {
+                    this.baseHolizon[i][j] = dataTable.get(i).get(j);
                 } else {
                     // จัดการกรณีที่คอลัมน์ขาดหายไป เช่น กำหนดเป็น 0 หรือค่า default
                     this.baseHolizon[i][j] = 0;
@@ -468,6 +458,7 @@ class VolumeOfGasCalculator {
                 topHolizon[i][j] = baseHolizon[i][j] - 200;
                 volume[i][j] = 150*150*(fluidContract - (topHolizon[i][j]));
                 percenrVolume[i][j] =  ((double)volume[i][j] / (double)(150*150*(200))) * 100;
+                
                 if(percenrVolume[i][j] > 100 || percenrVolume[i][j] < 0){
                     //อยากแก้ให้ปกติ แก้ตรงนี้ นะ เปลี่ยนเป็น false แล้ว ลบ 2 บรรทัดล่างนี้ออก ยกเว้น infoOfDataIsReal
                     if(percenrVolume[i][j] > 100){percenrVolume[i][j] = 100;}
