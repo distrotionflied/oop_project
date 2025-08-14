@@ -35,6 +35,7 @@ class MyFrame extends JFrame {
     private LoadFileListener loadFileListener = new LoadFileListener();
     private Timer updateTimer = new Timer(1000, e -> updateAutomatically()); 
     private OutputPanel outputPanel;
+    boolean infoOfDataIsReal = true;
     
     private void updateAutomatically() {
         if (loadFileListener.getloadFileSuccess_Status()) {
@@ -331,8 +332,8 @@ class RoundedButton extends JButton {
                                 loadFileSuccess = true;
                         }else{
                             JOptionPane.showMessageDialog(MyFrame.this,
-                                "Your data isn't base on Reality.",
-                                "Invalid Data Error",
+                                "Your data isn't base on Reality plese fix your data in your file or fix number of fluidContract level again for better output.",
+                                "Warning Invalid Data",
                                 JOptionPane.WARNING_MESSAGE);
                                 return;
                         }
@@ -388,7 +389,7 @@ class OutputPanel extends JPanel{
                 label.setBorder(BorderFactory.createLineBorder(Color.BLACK));
                 if (percent[i][j] >= 50) {
                     label.setBackground(new Color(144, 238, 144)); //สีเขียว
-                } else if (percent[i][j] == 0) {
+                } else if (percent[i][j] <= 0) {
                     label.setBackground(Color.RED);
                 } else if(percent[i][j] < 50){
                     label.setBackground(new Color(240, 230, 140)); //สีเหลือง
@@ -415,7 +416,6 @@ class VolumeOfGasCalculator {
     private int [][] topHolizon; 
     private int [][] volume;
     private double [][] percenrVolume;
-    boolean infoOfDataIsReal = true;
 
     public VolumeOfGasCalculator(int row, int col , int fluidContract){
         this.row = row;
@@ -469,7 +469,10 @@ class VolumeOfGasCalculator {
                 volume[i][j] = 150*150*(fluidContract - (topHolizon[i][j]));
                 percenrVolume[i][j] =  ((double)volume[i][j] / (double)(150*150*(200))) * 100;
                 if(percenrVolume[i][j] > 100 || percenrVolume[i][j] < 0){
-                    infoOfDataIsReal = false;
+                    //อยากแก้ให้ปกติ แก้ตรงนี้ นะ เปลี่ยนเป็น false แล้ว ลบ 2 บรรทัดล่างนี้ออก ยกเว้น infoOfDataIsReal
+                    if(percenrVolume[i][j] > 100){percenrVolume[i][j] = 100;}
+                    if(percenrVolume[i][j] < 0){percenrVolume[i][j] = 0;}
+                    infoOfDataIsReal = true;
                 }
             }
         }                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                 
