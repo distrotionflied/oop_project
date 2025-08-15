@@ -36,6 +36,11 @@ class MyFrame extends JFrame {
     private OutputPanel outputPanel;
     boolean infoOfDataIsReal = true;
     
+    /*
+     * UpDateAotomatically ใช้สำหรับอัพเดพค่า fluid contact และคำนวนปริมาตร แบบอัติโนมัติ
+     * ทำงานแค่ตอนที่โหลดไฟล์เสร็จเท่านั้น
+     * 
+     */
     private void updateAutomatically() {
         if (loadFileListener.getloadFileSuccess_Status()) {
             try {
@@ -134,6 +139,13 @@ class MyFrame extends JFrame {
     add(outputPanel, BorderLayout.CENTER);
 
     // ฟังชันก์ปุ่ม Calculate
+    /*
+     * เอาไว้กดปุ่มCalcualate
+     * ก็คือจะแปลงค่าที่ใส่ลงไปในช่องcalculate จากนั้นจะเป็นจากStringในช่องนั้นให้เป็น int 
+     * ถ้าไม่ใช่ พวกตัวเลขเป็นพวก ABC พวกตัวอักษร มันจะเกิด Exception NumberFormat เเล้วมันจะโชว์ข้อความว่า
+     * Please enter a valid number 
+     * ก็คือต้องใส่พวกตัวเลขเท่านั้น
+     */
     Calculate.addActionListener(e -> {
         try {
             int newFluidContact = Integer.parseInt(textCal.getText());
@@ -149,9 +161,12 @@ class MyFrame extends JFrame {
     });
 
     // ตรวจค่าทันทีเมื่อพิมพ์
+    /*
+     * ตัวDocumentจะรอจับการเปลี่ยนแปลงของค่าในช่อง Calculate เเล้วถ้าเกิดการเปลี่ยนแปลงจะทำการ อัพเดตการคำนวนให้ทั้งที่ ไม่ว่าจะลบ หรือ เพิ่ม จำนวนของข้อมูล
+     */
     textCal.getDocument().addDocumentListener(new DocumentListener() {
-        @Override public void insertUpdate(DocumentEvent e) { updateAutomatically(); }
-        @Override public void removeUpdate(DocumentEvent e) { updateAutomatically(); }
+        @Override public void insertUpdate(DocumentEvent e) { updateAutomatically(); }//เอาไว้ตรวจสอบว่ามีการเพิ่มข้อมูลใหม่
+        @Override public void removeUpdate(DocumentEvent e) { updateAutomatically(); }//เอาไว้ตรวจว่ามีการลบข้อมูล
         @Override public void changedUpdate(DocumentEvent e) {}
     });
 
@@ -161,6 +176,7 @@ class MyFrame extends JFrame {
     //END======================================================================================
 
 class RoundedButton extends JButton {
+    //เป็นการแต่งปุ่มโหลดไฟล์เฉยๆ
     public RoundedButton(String label) {
         super(label);
         setOpaque(false);
@@ -175,9 +191,9 @@ class RoundedButton extends JButton {
     @Override
     protected void paintComponent(Graphics g) {
         Graphics2D g2 = (Graphics2D) g.create();
-        g2.setRenderingHint(RenderingHints.KEY_ANTIALIASING, RenderingHints.VALUE_ANTIALIAS_ON);
+        g2.setRenderingHint(RenderingHints.KEY_ANTIALIASING, RenderingHints.VALUE_ANTIALIAS_ON); //ทำให้พวกปุ่มโค้งไม่เป็นหยักให้ดูสวยขึ้น
         g2.setColor(getBackground());
-        g2.fillRoundRect(0, 0, getWidth(), getHeight(), 30, 30);
+       // g2.fillRoundRect(0, 0, getWidth(), getHeight(), 30, 30); //ทำให้มันด
         super.paintComponent(g2);
         g2.dispose();
     }
