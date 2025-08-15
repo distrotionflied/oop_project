@@ -21,7 +21,6 @@ public class application {
 
     }
 }
-
 class MyFrame extends JFrame {
 
     private JPanel buttomJPanel;
@@ -32,7 +31,6 @@ class MyFrame extends JFrame {
     private JButton Calculate;
     private JLabel textDistance;
     private LoadFileListener loadFileListener = new LoadFileListener();
-    private Timer updateTimer = new Timer(1000, e -> updateAutomatically()); 
     private OutputPanel outputPanel;
     boolean infoOfDataIsReal = true;
     
@@ -45,7 +43,7 @@ class MyFrame extends JFrame {
         if (loadFileListener.getloadFileSuccess_Status()) {
             try {
                 int newFluidContact = Integer.parseInt(textCal.getText());
-                loadFileListener.getVGC().setbaseHolizonValue(newFluidContact);
+                loadFileListener.getVGC().setFluidContract(newFluidContact);
                 loadFileListener.getVGC().findGasVolume();
                 outputPanel.refreshPanel();
             } catch (NumberFormatException ex) {
@@ -149,7 +147,7 @@ class MyFrame extends JFrame {
     Calculate.addActionListener(e -> {
         try {
             int newFluidContact = Integer.parseInt(textCal.getText());
-            loadFileListener.getVGC().setbaseHolizonValue(newFluidContact);
+            loadFileListener.getVGC().setFluidContract(newFluidContact);
             loadFileListener.getVGC().findGasVolume();
             outputPanel.refreshPanel();
         } catch (NumberFormatException ex) {
@@ -193,7 +191,7 @@ class RoundedButton extends JButton {
         Graphics2D g2 = (Graphics2D) g.create();
         g2.setRenderingHint(RenderingHints.KEY_ANTIALIASING, RenderingHints.VALUE_ANTIALIAS_ON); //ทำให้พวกปุ่มโค้งไม่เป็นหยักให้ดูสวยขึ้น
         g2.setColor(getBackground());
-       // g2.fillRoundRect(0, 0, getWidth(), getHeight(), 30, 30); //ทำให้มันด
+        g2.fillRoundRect(0, 0, getWidth(), getHeight(), 30, 30); //ทำให้มันด
         super.paintComponent(g2);
         g2.dispose();
     }
@@ -210,10 +208,12 @@ class RoundedButton extends JButton {
         private VolumeOfGasCalculator vgc;
         double[][] allPercent;
         int[][] allValue;
-        //สำหรับเป็น แถวและหลัก ที่โหลดจากไฟล์มาได้
+        //สำหรับเป็น ข้อมูลแถวและหลัก ที่โหลดจากไฟล์มาได้
         int loadRow;
         int loadCol;
+        //ตรวจสอบว่าโหลดไฟลืเสร็จแล้วใข่ไหม
         boolean loadFileSuccess = false;
+        //เมธอดรับค่าต่างๆ
         public int getLoadCol() {
                 return loadCol;
         }
@@ -232,6 +232,7 @@ class RoundedButton extends JButton {
         public VolumeOfGasCalculator getVGC() {
             return vgc;
         }
+        //action listner
         @Override
         public void actionPerformed(ActionEvent e) {
             JFileChooser chooseFile = new JFileChooser();
@@ -325,7 +326,7 @@ class RoundedButton extends JButton {
                                 }
                             vgc = new VolumeOfGasCalculator(rowThatCanUsed, colOfLineChecker,fluiidContract);
                             vgc.setbaseHolizonValuePerline(baseHolizonDataTable);
-                           
+                        //เรียกเมธอดมาคำนวณ และ ทำการเก็บค่า ลงใน attribute ของคลาส 
                         vgc.findGasVolume(); //คำนวณหาค่า
                         allPercent = vgc.getPercentVolume();
                         allValue = vgc.getVolume();
@@ -363,11 +364,14 @@ class RoundedButton extends JButton {
 
 //class สำหรับ พาเนบแสดงผล
 class OutputPanel extends JPanel{
+    //attribute ของคลาส
     LoadFileListener lfl;
     int col;
     int row;
     public OutputPanel(LoadFileListener lfl) {  
+        //ที่ผมเรียกใช้ LoadFileListener เพราะว่า เรามีเมธอด และ attribute นี้ในคลาสแต่เดิมที่จะใช้ในการคำนวณอยู่แล้ว
         this.lfl = lfl;
+        //รีเฟรช พาเนล
          refreshPanel(); // เรียกครั้งแรกเมื่อสร้าง
     }
     void refreshPanel(){
@@ -376,6 +380,7 @@ class OutputPanel extends JPanel{
         this.removeAll(); // ลบคอมโพเนนต์ทั้งหมดใน panel
         if(lfl.getloadFileSuccess_Status()){
             setBackground(Color.WHITE);
+            //set Layout ของ panel
             setLayout(new GridLayout(row,col,1,1));
             VolumeOfGasCalculator vgc = lfl.getVGC();
             double[][] percent = vgc.getPercentVolume();
@@ -400,6 +405,7 @@ class OutputPanel extends JPanel{
                 } else if(percent[i][j] < 50){
                     label.setBackground(new Color(240, 230, 140)); //สีเหลือง
                 }
+                //เพิ่ม label ลงใน พาเนล
                 this.add(label); // ❗❗ สำคัญ
                 }
             }
@@ -423,6 +429,7 @@ class VolumeOfGasCalculator {
     private int [][] volume;
     private double [][] percenrVolume;
 
+    //คอนสตรัคเตอร์
     public VolumeOfGasCalculator(int row, int col , int fluidContract){
         this.row = row;
         this.col = col;
@@ -432,6 +439,8 @@ class VolumeOfGasCalculator {
         percenrVolume = new double[this.row][this.col]; 
         this.fluidContract = fluidContract;
     }
+
+    //เมธอดเช็ทค่า
     public void setbaseHolizonValuePerline(List<List<Integer>> dataTable){
         for (int i = 0; i < this.row; i++) {
             // ตรวจสอบขนาดคอลัมน์ในแต่ละแถว (ถ้าเป็นไปได้)
@@ -450,9 +459,11 @@ class VolumeOfGasCalculator {
             }
         }
     }
-    public void setbaseHolizonValue(int data){
+    public void setFluidContract(int data){
         fluidContract = data;
     }
+
+    //เมธอดดึงค่า
     public int getCol() {
         return col;
     }
@@ -465,16 +476,22 @@ class VolumeOfGasCalculator {
     public double[][] getPercentVolume(){
         return percenrVolume;
     }
+
+
+    //ตรวจสอบว่า ข้อมูล ถูกต้อง ตามที่มันควรเป็นไหม
     public boolean isInfoOfDataIsReal(){
         return infoOfDataIsReal;
     }
+    //ส่วนหาค่าปริมาตร และเปอร์เซ็นต์เพื่อการแสดงผล
     public void findGasVolume(){
         for (int i = 0; i < baseHolizon.length; i++) {
             for (int j = 0; j < baseHolizon[0].length; j++) {
+                //หาค่า topHolizon จากการนำ baseHolizon[i][j] - 200
                 topHolizon[i][j] = baseHolizon[i][j] - 200;
+                //คำนวณหาปริมาณแก๊ส และ เปอร์เซ็นต์
                 volume[i][j] = 150*150*(fluidContract - (topHolizon[i][j]));
                 percenrVolume[i][j] =  ((double)volume[i][j] / (double)(150*150*(200))) * 100;
-                
+                //ฟังก์ชั่นตรวจสอบค่า เมื่อ percenrVolume มีค่ามากกว่า 100 หรือ น้อยกว่า 0
                 if(percenrVolume[i][j] > 100 || percenrVolume[i][j] < 0){
                     //อยากแก้ให้ปกติ แก้ตรงนี้ นะ เปลี่ยนเป็น false แล้ว ลบ 2 บรรทัดล่างนี้ออก ยกเว้น infoOfDataIsReal
                     if(percenrVolume[i][j] > 100){percenrVolume[i][j] = 100;}
