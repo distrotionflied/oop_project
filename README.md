@@ -1,2 +1,2 @@
-# gui_project
+# oop project
 
