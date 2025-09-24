@@ -15,9 +15,13 @@ import javax.swing.ImageIcon;
 
 public class AsteroidMain {
     public static void main(String[] args) {
-        Frame_window fw = new Frame_window(args[0]);
-        fw.setVisible(true);
-        System.out.println(args[0]);
+        if(args[0] != null){
+            Frame_window fw = new Frame_window(args[0]);
+            fw.setVisible(true);
+            System.out.println(args[0]);
+        }else{
+            System.out.println("EROR! Plaese Read Manual Of RunFlie Fist");
+        }
     }
 }
 //frame class
