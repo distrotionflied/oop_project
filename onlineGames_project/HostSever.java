@@ -5,7 +5,6 @@ import javax.swing.JPanel;
 import javax.swing.JTable;
 import javax.swing.JTextArea;
 import javax.swing.JScrollPane;
-import javax.swing.JTextField;
 import javax.swing.border.Border;
 import javax.swing.border.EmptyBorder;
 import java.awt.BorderLayout;
@@ -14,6 +13,8 @@ import java.awt.Color;
 import java.awt.FlowLayout;
 import java.awt.GridLayout;
 import java.awt.Panel;
+import java.awt.event.ActionEvent;
+import java.awt.event.ActionListener;
 
 public class HostSever {
     public static void main(String[] args) {
@@ -22,19 +23,18 @@ public class HostSever {
     }
 }
 class HostPage extends JFrame {
-    HostPage(){
-        JPanel panel = new JPanel();
-        JPanel panel2 = new JPanel();
-        JLabel rommJLabel = new JLabel("Room Number : 200");
-        String data[][] = {
+    JPanel panel = new JPanel();
+    JPanel panel2 = new JPanel();
+    JLabel rommJLabel = new JLabel("Room Number : 200");
+    String data[][] = {
             { "Row1/1", "Row1/2"},
             { "Row2/1", "Row2/2"},
             { "Row3/1", "Row3/2"},
             { "Row4/1", "Row4/2"}, 
-        };
-
-        String header[] = { "Username", "Status"};
-
+    };
+    String header[] = { "Username", "Status"};  
+    JButton readyButton = new JButton("Ready"); 
+    HostPage(){
         JTable tableList = new JTable(data,header){
             @Override
             public boolean isCellEditable(int row, int column) {
@@ -59,23 +59,19 @@ class HostPage extends JFrame {
         add(panel2,BorderLayout.CENTER);
         add(panel,BorderLayout.SOUTH);
 
-        panel.setLayout(new FlowLayout());
-        panel.add(new Button("Ready"));
-    }
-}
+        readyButton.addActionListener(new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent e) {
+                // TODO Auto-generated method stub
+                if(readyButton.getText().equals("Ready")){
+                    readyButton.setText("Not Ready");
+                }else{
+                    readyButton.setText("Ready");
+                }
+            }
+        });
 
-class JoinPage extends JFrame {
-    JPanel buttonPanel = new JPanel();
-    JoinPage(){
-        setTitle("Join Room");
-        setSize(250,100);
-        setLocationRelativeTo(null);
-        setResizable(false);
-        setLayout(new BorderLayout());
-        add(new JTextField("Room Number"),BorderLayout.NORTH);
-        add(buttonPanel,BorderLayout.CENTER);
-        //buttonPanel.setLayout(new GridLayout(4,3,10,10));
-        //buttonPanel.setBorder(new EmptyBorder(1,1,1,1));
-        buttonPanel.add(new JButton("JOIN"));
+        panel.setLayout(new FlowLayout());
+        panel.add(readyButton);
     }
 }
