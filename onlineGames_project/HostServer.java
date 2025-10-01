@@ -16,16 +16,10 @@ import java.awt.Panel;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 
-public class HostSever {
-    public static void main(String[] args) {
-        JoinPage jp = new JoinPage();
-        jp.setVisible(true);
-    }
-}
-class HostPage extends JFrame {
+class HostPageFrame extends JFrame {
     JPanel panel = new JPanel();
     JPanel panel2 = new JPanel();
-    JLabel rommJLabel = new JLabel("Room Number : 200");
+    JLabel roomJLabel = new JLabel("Host Room Number : 200");
     String data[][] = {
             { "Row1/1", "Row1/2"},
             { "Row2/1", "Row2/2"},
@@ -34,7 +28,7 @@ class HostPage extends JFrame {
     };
     String header[] = { "Username", "Status"};  
     JButton readyButton = new JButton("Ready"); 
-    HostPage(){
+    HostPageFrame(){
         JTable tableList = new JTable(data,header){
             @Override
             public boolean isCellEditable(int row, int column) {
@@ -54,8 +48,8 @@ class HostPage extends JFrame {
         panel2.setLayout(new BorderLayout());
         panel2.add(scrollPane,BorderLayout.CENTER);
 
-        rommJLabel.setHorizontalAlignment(0);
-        add(rommJLabel,BorderLayout.NORTH);
+        roomJLabel.setHorizontalAlignment(0);
+        add(roomJLabel,BorderLayout.NORTH);
         add(panel2,BorderLayout.CENTER);
         add(panel,BorderLayout.SOUTH);
 
