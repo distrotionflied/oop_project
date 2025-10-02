@@ -22,7 +22,10 @@ public class JoinPageFrame extends JFrame {
     JPanel buttonPanel = new JPanel();
     JButton button = new JButton("JOIN");
     boolean activeFrame;
-    JoinPageFrame(){
+    HomePageFrame homePage;
+    JoinPageFrame(HomePageFrame homePage){
+        this.homePage = homePage;
+
         setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
         setTitle("Join Room");
         setSize(250,100);
@@ -57,7 +60,7 @@ public class JoinPageFrame extends JFrame {
                     JOptionPane.showMessageDialog(JoinPageFrame.this, "Please enter a valid room number.", "Error", JOptionPane.ERROR_MESSAGE);
                     return;
                 }else{
-                    HostPageFrame hostPage = new HostPageFrame(null,false);
+                    HostPageFrame hostPage = new HostPageFrame(JoinPageFrame.this.homePage,false);
                     hostPage.setVisible(true);
                     setVisible(false);
                 }

@@ -51,13 +51,13 @@ class HomePageFrame extends JFrame {
         hostButton.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
-                userStatus = true;
-                hostPageFrame = new HostPageFrame(HomePageFrame.this,userStatus);
                 if (username.getText().trim().isEmpty() || username.getText().equals("Enter Your Username")) {
                     JOptionPane.showMessageDialog(HomePageFrame.this, "Please enter a valid username.", "Error", JOptionPane.ERROR_MESSAGE);
                     return;
                 }else{
-                    Thread serverThread = new ServerThread(hostPageFrame);
+                    userStatus = true;
+                    hostPageFrame = new HostPageFrame(HomePageFrame.this,userStatus);
+                    ServerThread serverThread = new ServerThread(hostPageFrame);
                     serverThread.start();
                     hostPageFrame.setVisible(true);
                     dispose();
@@ -69,11 +69,11 @@ class HomePageFrame extends JFrame {
         joinButton.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
-                joinPageFrame = new JoinPageFrame();
                 if (username.getText().trim().isEmpty() || username.getText().equals("Enter Your Username")) {
                     JOptionPane.showMessageDialog(HomePageFrame.this, "Please enter a valid username.", "Error", JOptionPane.ERROR_MESSAGE);
                     return;
                 }else{
+                    joinPageFrame = new JoinPageFrame(HomePageFrame.this);
                     joinPageFrame.setVisible(true);
                     dispose();
                 }

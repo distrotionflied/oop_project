@@ -16,8 +16,10 @@ import java.awt.Panel;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.io.BufferedReader;
+import java.io.IOException;
 import java.io.InputStream;
 import java.io.InputStreamReader;
+import java.io.PrintWriter;
 import java.lang.reflect.Array;
 import java.net.InetAddress;
 import java.net.ServerSocket;
@@ -105,39 +107,55 @@ class HostPageFrame extends JFrame {
 }
 
 class ServerThread extends Thread {
-	// Frame
-	HostPageFrame server;
-	public ServerThread(HostPageFrame server) {
-		this.server = server;
-	}
-	@Override
-	public void run() {
-        System.out.println("Server Thread Running");
-		try {
-			// Open port 50101 for receiving data
-			ServerSocket servSocket = new ServerSocket(50101);
-			// Loop for waiting data
-			while (true) {
-				try {
-					String line = "";
-					// Waiting for data
-					Socket socket = servSocket.accept();
-					// Data in then convert to String
-					InputStream input = socket.getInputStream();
-					InputStreamReader inputStream = new InputStreamReader(input);
-					BufferedReader bufferIn = new BufferedReader(inputStream);
-					// Read all lines to TextArea
-					while ((line = bufferIn.readLine()) != null) {
-						//server.setHostRoomNumber(line);
-                        //อ่านข้อมูลจาก client มาแสดงที่ label
-					}
-					bufferIn.close();
-				} catch (Exception e) {
-					e.printStackTrace();
-				}
-			}
-		} catch (Exception e1) {
-			e1.printStackTrace();
-		}
-	}
+    HostPageFrame server;
+    public ServerThread(HostPageFrame server) {
+        this.server = server;
+    }
+    public void run() {
+        try {
+            ServerSocket servSocket = new ServerSocket(50101);
+            System.out.println("✅ Server started on port 50101");
+            
+            while (true) {
+                Socket clientSocket = servSocket.accept();
+                System.out.println("🎉 New player connected!");
+                
+                // สร้าง thread ใหม่เพื่อจัดการ player แต่ละคน
+                ClientHandler clientHandler = new ClientHandler(clientSocket, server);
+                clientHandler.start();
+            }
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+    }
+}
+
+class ClientHandler extends Thread {
+    private Socket socket;
+    private HostPageFrame hostPage;
+    
+    public ClientHandler(Socket socket, HostPageFrame hostPage) {
+        this.socket = socket;
+        this.hostPage = hostPage;
+    }
+    
+    public void run() {
+        try {
+            BufferedReader in = new BufferedReader(new InputStreamReader(socket.getInputStream()));
+            PrintWriter out = new PrintWriter(socket.getOutputStream(), true);
+            
+            String message;
+            while ((message = in.readLine()) != null) {
+                System.out.println("📨 Received: " + message);
+                
+                if (message.startsWith("JOIN:")) {
+                    String username = message.substring(5); // ตัด "JOIN:" ออก
+                    // TODO: เพิ่มผู้เล่นใหม่ในตาราง
+                    out.println("WELCOME:" + username); // ตอบกลับว่า join สำเร็จ
+                }
+            }
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+    }
 }
