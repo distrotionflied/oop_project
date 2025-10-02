@@ -12,6 +12,11 @@ import java.awt.event.MouseListener;
 import java.awt.event.ActionListener;
 import java.awt.event.ActionEvent;
 import java.awt.event.MouseAdapter;
+import java.io.BufferedReader;
+import java.io.InputStream;
+import java.io.InputStreamReader;
+import java.net.ServerSocket;
+import java.net.Socket;
 
 public class JoinPageFrame extends JFrame {
     JPanel buttonPanel = new JPanel();
@@ -25,7 +30,6 @@ public class JoinPageFrame extends JFrame {
         setResizable(false);
         setLayout(new BorderLayout());
         JTextField roomNumberField = new JTextField("Host Room Number");
-        roomNumberField.setEditable(false);
         roomNumberField.addMouseListener(new MouseAdapter() {
             @Override
             public void mouseClicked(java.awt.event.MouseEvent e) {
@@ -40,7 +44,6 @@ public class JoinPageFrame extends JFrame {
             public void keyTyped(java.awt.event.KeyEvent e) {
                 if (roomNumberField.getText().equals("Host Room Number")) {
                         roomNumberField.setText("");
-                        roomNumberField.setEditable(true);
                 }
             }
         });
@@ -54,7 +57,7 @@ public class JoinPageFrame extends JFrame {
                     JOptionPane.showMessageDialog(JoinPageFrame.this, "Please enter a valid room number.", "Error", JOptionPane.ERROR_MESSAGE);
                     return;
                 }else{
-                    HostPageFrame hostPage = new HostPageFrame();
+                    HostPageFrame hostPage = new HostPageFrame(null,false);
                     hostPage.setVisible(true);
                     setVisible(false);
                 }
@@ -62,4 +65,3 @@ public class JoinPageFrame extends JFrame {
         });
     }
 }
-

@@ -11,6 +11,11 @@ public class HomePage{
     }
 }
 class HomePageFrame extends JFrame {
+    JTextField username = new JTextField("Enter Your Username",20);
+    HostPageFrame hostPageFrame;
+    JoinPageFrame joinPageFrame;
+
+    boolean userStatus = false;
     public HomePageFrame() {
         setTitle("Home Page");
         setSize(400, 300);
@@ -19,7 +24,6 @@ class HomePageFrame extends JFrame {
         setResizable(false);
         setLayout(new BorderLayout());
 
-        JTextField username = new JTextField("Enter Your Username",20);
         JPanel titlePanel = new JPanel();
         titlePanel.setLayout(new FlowLayout());
         titlePanel.add(new JLabel("Welcome to the Online Game"));
@@ -47,11 +51,15 @@ class HomePageFrame extends JFrame {
         hostButton.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
+                userStatus = true;
+                hostPageFrame = new HostPageFrame(HomePageFrame.this,userStatus);
                 if (username.getText().trim().isEmpty() || username.getText().equals("Enter Your Username")) {
                     JOptionPane.showMessageDialog(HomePageFrame.this, "Please enter a valid username.", "Error", JOptionPane.ERROR_MESSAGE);
                     return;
                 }else{
-                    new HostPageFrame().setVisible(true);
+                    Thread serverThread = new ServerThread(hostPageFrame);
+                    serverThread.start();
+                    hostPageFrame.setVisible(true);
                     dispose();
                 }
             }
@@ -61,11 +69,12 @@ class HomePageFrame extends JFrame {
         joinButton.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
+                joinPageFrame = new JoinPageFrame();
                 if (username.getText().trim().isEmpty() || username.getText().equals("Enter Your Username")) {
                     JOptionPane.showMessageDialog(HomePageFrame.this, "Please enter a valid username.", "Error", JOptionPane.ERROR_MESSAGE);
                     return;
                 }else{
-                    new JoinPageFrame().setVisible(true);
+                    joinPageFrame.setVisible(true);
                     dispose();
                 }
             }
