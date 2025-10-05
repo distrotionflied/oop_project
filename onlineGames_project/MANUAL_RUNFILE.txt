@@ -1,1 +1,24 @@
 client sever project
+
+--------------Structure--------------
+src/
+├── model/
+│   ├── GameRoom.java
+│   ├── Player.java
+│   └── GameState.java
+├── network/
+│   ├── GameServer.java
+│   ├── ClientHandler.java
+│   └── GameClient.java
+├── view/
+│   ├── HomePageFrame.java
+│   ├── HostPageFrame.java
+│   ├── JoinPageFrame.java
+│   └── components/
+│       ├── PlayerTable.java
+│       └── ConnectionPanel.java
+├── controller/
+│   ├── GameController.java
+│   ├── NetworkController.java
+│   └── PageController.java
+└── Main.java
