@@ -14,8 +14,19 @@ public class UserStatus implements Serializable{
         ChatMessage chat      = new ChatMessage(this);
         GameStatus gameStatus = new GameStatus(this);
     }  
+    public String getUsername() {
+        return Username;
+    }
+    public ChatMessage getChat() {
+        return chat;
+    }
+    public WaitingRoomStatus getWrs() {
+        return wrs;
+    }
+    public GameStatus getGameStatus() {
+        return gameStatus;
+    }
 }
-
 //chat
 class ChatMessage{
     String content;
@@ -25,6 +36,9 @@ class ChatMessage{
     }
     public void setContent(String content) {
         this.content = content;
+    }
+    public String getContent() {
+        return content;
     }
 }
 
