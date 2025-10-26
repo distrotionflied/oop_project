@@ -1,0 +1,9 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project version="4">
+  <component name="ProjectModuleManager">
+    <modules>
+      <module fileurl="file://$PROJECT_DIR$/recycle_bin/Nigga Code.iml" filepath="$PROJECT_DIR$/recycle_bin/Nigga Code.iml" />
+      <module fileurl="file://$PROJECT_DIR$/game_snake.iml" filepath="$PROJECT_DIR$/game_snake.iml" />
+    </modules>
+  </component>
+</project>
